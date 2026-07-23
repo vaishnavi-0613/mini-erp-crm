@@ -166,20 +166,13 @@ Variables" instead of a committed `.env` file — the variable names are identic
 
 ## 8. Known limitations / incomplete parts
 
-- **Invoicing** is out of scope for this build (the brief's core modules are Auth/Roles, CRM,
-  Product/Inventory, and Sales Challan — invoicing wasn't listed as a required module). Challans can
-  serve as the basis for invoice generation later.
-- **Purchase orders** (mentioned in the business context paragraph) are not a separate module;
-  incoming stock is handled via the Product & Stock module's manual "stock movement" (IN) feature.
-  A dedicated PO module with supplier tracking would be a natural next addition.
-- **Bonus items not implemented**: Docker setup for a Docker deployment. GitHub Actions CI/CD,
-  PDF invoice export, and S3 image upload were called out as bonus/optional and are not included in
-  this pass, since bonus points are explicity marked as non mandatory.
-- **Automated tests** (unit/integration) are not included; this was prioritized to fit the 48-hour
-  scope around the required core modules first.
-- **Search** is a simple case-insensitive `contains` match (via Prisma), not a full-text index —
-  fine at this data scale, would move to Postgres full-text search or a search service at larger
-  scale.
+## 8. Known limitations / incomplete parts
+
+* Invoicing is out of scope — the brief's required modules are Auth/Roles, CRM, Product/Inventory, and Sales Challan. Challans can serve as the basis for invoice generation later.
+* Purchase orders (mentioned in the business context paragraph) are not a separate module; incoming stock is handled via the Product & Stock module's manual "stock movement" (IN) feature. A dedicated PO module with supplier tracking would be a natural next addition.
+* Bonus items not implemented: Docker deployment, GitHub Actions CI/CD, PDF invoice export, and S3 image upload were called out as bonus/optional and are not included in this pass, since bonus points are explicitly marked as non-mandatory.
+* Automated tests (unit/integration) are not included; this was prioritized to fit the 48-hour scope around the required core modules first.
+* Search is a simple case-insensitive `contains` match (via Prisma), not a full-text index — fine at this data scale, would move to Postgres full-text search or a search service at larger scale.
 
 ---
 
