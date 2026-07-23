@@ -1,0 +1,406 @@
+{
+  "info": {
+    "name": "Mini ERP + CRM Operations Portal",
+    "description": "REST API collection for the Mini ERP/CRM backend. Set the {{baseUrl}} and run 'Login' first - it auto-saves the token into {{token}} for all other requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000" },
+    { "key": "token", "value": "" },
+    { "key": "customerId", "value": "" },
+    { "key": "productId", "value": "" },
+    { "key": "challanId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.data && data.data.token) { pm.collectionVariables.set('token', data.data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@erp.test\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login (Sales)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sales@erp.test\",\n  \"password\": \"Sales@123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login (Warehouse)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"warehouse@erp.test\",\n  \"password\": \"Warehouse@123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login (Accounts)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"accounts@erp.test\",\n  \"password\": \"Accounts@123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Register new user (Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Sales Rep\",\n  \"email\": \"newsales@erp.test\",\n  \"password\": \"Sales@123\",\n  \"role\": \"SALES\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Current user (me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.data && data.data.id) { pm.collectionVariables.set('customerId', data.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Anita Distributors\",\n  \"mobile\": \"9998887770\",\n  \"email\": \"anita@distributors.test\",\n  \"businessName\": \"Anita Distributors Pvt Ltd\",\n  \"customerType\": \"DISTRIBUTOR\",\n  \"address\": \"Banjara Hills, Hyderabad\",\n  \"status\": \"LEAD\"\n}"
+            },
+            "url": "{{baseUrl}}/customers"
+          }
+        },
+        {
+          "name": "List customers (search + pagination)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/customers?page=1&limit=20&search=&status=",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "" },
+                { "key": "status", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get customer detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/customers/{{customerId}}"
+          }
+        },
+        {
+          "name": "Update customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACTIVE\",\n  \"followUpDate\": \"2026-08-01T00:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/customers/{{customerId}}"
+          }
+        },
+        {
+          "name": "Add follow-up note",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Called customer, interested in bulk stationery order next month.\"\n}"
+            },
+            "url": "{{baseUrl}}/customers/{{customerId}}/notes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.data && data.data.id) { pm.collectionVariables.set('productId', data.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Whiteboard Marker (Pack of 10)\",\n  \"sku\": \"SKU-010\",\n  \"category\": \"Stationery\",\n  \"unitPrice\": 180,\n  \"currentStock\": 40,\n  \"minStockAlert\": 10,\n  \"location\": \"Warehouse A\"\n}"
+            },
+            "url": "{{baseUrl}}/products"
+          }
+        },
+        {
+          "name": "List products (search + low stock filter)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&limit=20&search=&lowStock=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "" },
+                { "key": "lowStock", "value": "false" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get product detail + stock log",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Update product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unitPrice\": 190,\n  \"minStockAlert\": 15\n}"
+            },
+            "url": "{{baseUrl}}/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Record stock movement (IN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 50,\n  \"movementType\": \"IN\",\n  \"reason\": \"Purchase order receipt\"\n}"
+            },
+            "url": "{{baseUrl}}/products/{{productId}}/stock-movements"
+          }
+        },
+        {
+          "name": "Record stock movement (OUT - insufficient stock example)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 999999,\n  \"movementType\": \"OUT\",\n  \"reason\": \"Testing insufficient stock error\"\n}"
+            },
+            "url": "{{baseUrl}}/products/{{productId}}/stock-movements"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales Challans",
+      "item": [
+        {
+          "name": "Create challan (DRAFT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.data && data.data.id) { pm.collectionVariables.set('challanId', data.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{customerId}}\",\n  \"status\": \"DRAFT\",\n  \"items\": [\n    { \"productId\": \"{{productId}}\", \"quantity\": 5 }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/challans"
+          }
+        },
+        {
+          "name": "Create challan (CONFIRMED - reduces stock immediately)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{customerId}}\",\n  \"status\": \"CONFIRMED\",\n  \"items\": [\n    { \"productId\": \"{{productId}}\", \"quantity\": 2 }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/challans"
+          }
+        },
+        {
+          "name": "List challans (filter by status)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/challans?page=1&limit=20&status=",
+              "host": ["{{baseUrl}}"],
+              "path": ["challans"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get challan detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/challans/{{challanId}}"
+          }
+        },
+        {
+          "name": "Confirm challan (DRAFT -> CONFIRMED)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": "{{baseUrl}}/challans/{{challanId}}/status"
+          }
+        },
+        {
+          "name": "Cancel challan (restores stock if was CONFIRMED)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": "{{baseUrl}}/challans/{{challanId}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    }
+  ]
+}
