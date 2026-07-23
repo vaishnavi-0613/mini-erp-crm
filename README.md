@@ -2,7 +2,17 @@
 
 A small ERP/CRM system for a wholesale/distribution company covering customers, products/inventory,
 and sales challans, built with a Node.js/TypeScript/Express/PostgreSQL backend and a React/TypeScript
-frontend.
+frontend. 
+
+## 0. Submission details
+
+- **GitHub repository:** https://github.com/vaishnavi-0613/mini-erp-crm
+- **Live frontend URL:** Not deployed — running locally (see setup instructions below)
+- **Live backend API URL:** Not deployed — running locally (see setup instructions below)
+- **Test login credentials:** see [section 5](#5-test-login-credentials-all-roles) below
+- **Postman collection:** `postman_collection.json` in this repo
+- **Architecture overview:** see [section 9](#9-architecture-notes) below
+- **Known limitations:** see [section 8](#8-known-limitations--incomplete-parts) below
 
 ---
 
