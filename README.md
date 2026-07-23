@@ -164,7 +164,7 @@ Variables" instead of a committed `.env` file — the variable names are identic
 
 ---
 
-## 8. Known limitations / incomplete parts
+
 
 ## 8. Known limitations / incomplete parts
 
